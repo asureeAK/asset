@@ -19,17 +19,9 @@
             box-shadow: 0 4px 24px #0002;
             padding: 38px 32px 32px 32px;
         }
-        h1 {
-            font-size: 2.1em;
-            margin-bottom: 18px;
-            color: #1a287a;
-        }
-        .subtitle {
-            font-size: 1.15em;
-            color: #395074;
-            margin-bottom: 30px;
-        }
-        label { display:block; margin-top: 13px; font-weight: 500;color: #244d6e;}
+        h1 { font-size: 2.1em; margin-bottom: 18px; color: #1a287a; }
+        .subtitle { font-size: 1.15em; color: #395074; margin-bottom: 30px; }
+        label { display:block; margin-top: 13px; font-weight: 500; color: #244d6e;}
         input[type="text"], textarea {
             width: 100%; border-radius: 6px; padding: 7px 12px; font-size: 1em;
             border: 1px solid #b4bbd1; margin-top:6px;
@@ -37,16 +29,12 @@
         table { width: 100%; border-collapse: collapse; margin: 12px 0 18px 0;}
         th, td { border: 1px solid #cfe0ef; padding: 8px; text-align: center;}
         th { background: #e7ecfa;}
-        button {
-            background: #245ed8; color: #fff; border: none; border-radius: 7px;
-            padding: 9px 18px; font-size: 1.07em; font-weight: 600; cursor: pointer;
-            margin-top: 18px; margin-bottom: 8px;
+        button { background: #245ed8; color: #fff; border: none; border-radius: 7px;
+            padding: 9px 18px; font-size: 1.07em; font-weight: 600; cursor: pointer; margin-top: 18px; margin-bottom: 8px;
             transition: background 0.2s;
         }
         button:hover { background: #193e99; }
-        .delete-btn {
-            color: #d23535; background: none; border: none; font-size:1em; padding:0; cursor: pointer;
-        }
+        .delete-btn { color: #d23535; background: none; border: none; font-size:1em; padding:0; cursor: pointer; }
         .preview-section {
             background: #f6faff;
             border-radius: 10px;
@@ -56,6 +44,7 @@
         }
         h2 { font-size: 1.18em; color: #144a9a; margin-top: 16px;}
         .card { background:#f0f6fc; border:1px solid #dbe7f7; border-radius:13px; box-shadow:0 2px 8px #d9e1ee; margin-bottom:18px;padding:24px 15px;}
+        .asset-sentence { margin-bottom: 14px; display: block; color: #000; font-weight: 500;}
         @media (max-width:740px) {
             .container { max-width: 99vw; padding: 10vw 3vw;}
             table th, table td { padding:6px;}
@@ -86,6 +75,7 @@
                         <th>Asset Tag</th>
                         <th>Serial No</th>
                         <th>Charger Name</th>
+                        <th>Charging Adapter</th>
                         <th>Bag</th>
                         <th>Action</th>
                     </tr>
@@ -112,6 +102,7 @@ function addAssetRow() {
          <td><input type="text" placeholder="Asset Tag"></td>
          <td><input type="text" placeholder="Serial No"></td>
          <td><input type="text" placeholder="Charger Name"></td>
+         <td><input type="checkbox" class="adapterCheckbox" checked title="Include Charging Adapter"></td>
          <td><input type="checkbox" class="bagCheckbox"></td>
          <td><button class="delete-btn" onclick="deleteRow(this)">&#10006;</button></td>`;
 }
@@ -129,63 +120,97 @@ function getAssets() {
                 tag: cells[1].value.trim(),
                 serial: cells[2].value.trim(),
                 charger: cells[3].value.trim(),
-                withBag: cells[4].checked
+                withAdapter: cells[4].checked,
+                withBag: cells[5].checked
             });
         }
     });
     return assets;
 }
-function assetDesc(asset, location) {
-    let parts = [asset.name];
-    if(asset.charger) parts.push(`along with its ${asset.charger}`);
-    parts.push(asset.withBag ? "with a bag" : "but without a bag");
-    return `<span style="margin-bottom:18px;display:block;">Dispatching the ${parts.join(" ")} to ${location} for repair.</span>`;
+function assetSummarySentences(assets, location) {
+    return assets.map(asset => {
+        let acc = [];
+        if(asset.withAdapter) acc.push(asset.charger ? asset.charger : "charging adapter");
+        if(asset.withBag) acc.push("bag");
+        let desc = acc.length ? " along with its " + acc.join(" and ") : "";
+        return `<span class="asset-sentence">Dispatching the ${asset.name}${desc} to ${location}.</span>`;
+    }).join("");
+}
+function assetSummaryRows(assets) {
+    let rows = "";
+    assets.forEach(asset => {
+        // Main asset row
+        rows += `<tr>
+            <td>${asset.name}</td>
+            <td>${asset.serial}</td>
+            <td>${asset.tag}</td>
+        </tr>`;
+        // Accessories rows:
+        if(asset.withAdapter) {
+            rows += `<tr>
+            <td>${asset.charger ? asset.charger : "Charging Adapter"}</td>
+            <td>-</td><td>-</td>
+            </tr>`;
+        }
+        if(asset.withBag) {
+            rows += `<tr>
+            <td>Bag</td><td>-</td><td>-</td>
+            </tr>`;
+        }
+    });
+    return rows;
 }
 function renderMailContent(assets, location, dcLink, itPerson) {
     let dcNumber = dcLink ? `DC Link: <a href="${dcLink}" target="_blank">${dcLink}</a>` : "";
-    let assetRows = "";
-    assets.forEach(asset => {
-        assetRows += `<tr><td>${asset.name}</td><td>${asset.serial}</td><td>${asset.tag}</td><td>1</td></tr>`;
-        if(asset.charger) assetRows += `<tr><td>${asset.charger}</td><td>-</td><td>-</td><td>1</td></tr>`;
-        if(asset.withBag) assetRows += `<tr><td>Bag</td><td>-</td><td>-</td><td>1</td></tr>`;
-    });
-
-    let summaries = assets.map(a => assetDesc(a, location)).join("<br><br>");
+    let assetRows = assetSummaryRows(assets);
+    let sentences = assetSummarySentences(assets, location);
 
     return `
 <div style="margin-bottom:22px;"><strong>Hi Team,</strong></div>
-${summaries}
+${sentences}
 <div style="margin-bottom:18px;"><strong>Please confirm once you have received the following assets.</strong></div>
 ${dcNumber}
 <br><br><strong>Asset Details:</strong><br>
-<table><thead>
-    <tr><th>Material Name</th><th>Serial No</th><th>Asset No</th><th>Quantity</th></tr>
-</thead><tbody>
+<table style="margin-bottom:12px;">
+<thead>
+    <tr>
+        <th>Asset Name</th>
+        <th>Serial No</th>
+        <th>Asset Tag</th>
+    </tr>
+</thead>
+<tbody>
 ${assetRows}
-</tbody></table>
+</tbody>
+</table>
 <br><br><div><strong>Regards,<br>${itPerson ? itPerson : "<IT Person Name>"}</strong></div>
     `;
 }
 function renderFMGContent(assets, location, ticket1, ticket2) {
     let ticketLinks = ticket1 ? `<a href="${ticket1}" target="_blank">${ticket1}</a>` : "";
     ticketLinks += ticket2 ? `,<br><a href="${ticket2}" target="_blank">${ticket2}</a>` : "";
-
-    let descs = assets.map(asset => {
-        let bagTxt = asset.withBag ? "with bag" : "without bag";
-        let assetTxt = [asset.name];
-        if(asset.charger) assetTxt.push(`along with its ${asset.charger}`);
-        assetTxt.push(bagTxt);
-        return `<span style="margin-bottom:17px;display:block;">Please arrange for the courier of ${assetTxt.join(" ")} to ${location}</span>`;
-    }).join("<br><br>");
+    let assetRows = assetSummaryRows(assets);
 
     return `
 <div style="margin-bottom:24px;"><strong>FMG Ticket content:</strong></div>
 ${ticketLinks ? `[${ticketLinks} (ref)]<br><br>` : ""}
-${descs}
-<br><br>
+<div style="margin-bottom:18px;"><strong>Dispatched Assets:</strong></div>
+<table style="margin-bottom:12px;">
+<thead>
+    <tr>
+        <th>Asset Name</th>
+        <th>Serial No</th>
+        <th>Asset Tag</th>
+    </tr>
+</thead>
+<tbody>
+${assetRows}
+</tbody>
+</table>
+<div style="margin-bottom:16px;"><strong>Destination:</strong> ${location ? location : '-'}</div>
 <div style="margin-bottom:16px;"><strong>Description</strong></div>
 <div style="margin-bottom:16px;"><strong>Hi Team,</strong></div>
-${descs}
+Please arrange for the courier of the above assets to ${location}
     `;
 }
 function updatePreview() {
