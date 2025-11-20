@@ -2,211 +2,204 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Asset Handover Form</title>
+    <title>DC Dispatch & FMG Ticket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .main-container { display: flex; gap: 42px; align-items: flex-start; }
-        .form-section, .preview-section { flex: 1; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #bbb; padding: 8px; text-align: center; vertical-align: top; }
-        th { background: #f0f0f0; }
-        button { margin-top: 10px; padding: 8px 16px; font-weight: 600; }
-        .delete-btn { color: red; background: none; border: none; cursor: pointer; }
-        textarea, input[type="text"] { width: 95%; margin-top: 3px; }
-        .preview-section { background: #fafafa; padding: 18px; border: 1px solid #eee; min-height: 250px; }
-        .email-table { border-collapse: collapse; width: 100%; margin: 12px 0;}
-        .email-table th, .email-table td { border: 1px solid #bbb; padding: 6px; vertical-align: top; }
-        .email-table th { background: #eaeaea;}
-        .small-label { font-size: 0.95em; color: #444; margin-right: 8px;}
-        ul { margin-top: 0.5em; margin-bottom: 0.5em; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(120deg, #f4f8fc 0%, #e9ecf7 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #0002;
+            padding: 38px 32px 32px 32px;
+        }
+        h1 {
+            font-size: 2.1em;
+            margin-bottom: 18px;
+            color: #1a287a;
+        }
+        .subtitle {
+            font-size: 1.15em;
+            color: #395074;
+            margin-bottom: 30px;
+        }
+        label { display:block; margin-top: 13px; font-weight: 500;color: #244d6e;}
+        input[type="text"], textarea {
+            width: 100%; border-radius: 6px; padding: 7px 12px; font-size: 1em;
+            border: 1px solid #b4bbd1; margin-top:6px;
+        }
+        table { width: 100%; border-collapse: collapse; margin: 12px 0 18px 0;}
+        th, td { border: 1px solid #cfe0ef; padding: 8px; text-align: center;}
+        th { background: #e7ecfa;}
+        button {
+            background: #245ed8; color: #fff; border: none; border-radius: 7px;
+            padding: 9px 18px; font-size: 1.07em; font-weight: 600; cursor: pointer;
+            margin-top: 18px; margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        button:hover { background: #193e99; }
+        .delete-btn {
+            color: #d23535; background: none; border: none; font-size:1em; padding:0; cursor: pointer;
+        }
+        .preview-section {
+            background: #f6faff;
+            border-radius: 10px;
+            border: 1px solid #e3eaf7;
+            padding: 22px 19px;
+            margin-top: 38px;
+        }
+        h2 { font-size: 1.18em; color: #144a9a; margin-top: 16px;}
+        .card { background:#f0f6fc; border:1px solid #dbe7f7; border-radius:13px; box-shadow:0 2px 8px #d9e1ee; margin-bottom:18px;padding:24px 15px;}
+        @media (max-width:740px) {
+            .container { max-width: 99vw; padding: 10vw 3vw;}
+            table th, table td { padding:6px;}
+        }
     </style>
 </head>
 <body>
-<div class="main-container">
-    <div class="form-section">
-        <h2>Asset Handover Form</h2>
-        <label>Relieved Employee:
-            <input type="text" id="relievedEmployee">
-        </label><br>
-        <label>Asset Assigned Person:
-            <input type="text" id="assignedPerson">
-        </label><br>
-        <div><strong>Assets Returned</strong></div>
-        <table id="assetsTable">
-            <thead>
-                <tr>
-                    <th>Asset Name</th>
-                    <th>Asset Tag</th>
-                    <th>Serial No</th>
-                    <th class="small-label">Charging Adapter</th>
-                    <th class="small-label">Bag</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button type="button" onclick="addAssetRow()">+ Add Asset</button>
-        <div><strong>Assets Allocated</strong></div>
-        <table id="assignmentsTable">
-            <thead>
-                <tr>
-                    <th>Asset Name</th>
-                    <th>Asset Tag</th>
-                    <th>Serial No</th>
-                    <th class="small-label">Charging Adapter</th>
-                    <th class="small-label">Bag</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button type="button" onclick="addAssignmentRow()">+ Add Allocated Asset</button>
-        <div>General Comments (optional):</div>
-        <textarea id="comments" rows="2"></textarea>
-        <br>
-        <label>IT Member Name:
-            <input type="text" id="itMember">
-        </label>
-        <br>
+<div class="container">
+    <div class="card">
+        <h1>DC Dispatch & FMG Ticket</h1>
+        <div class="subtitle">Dispatch multiple assets and automatically generate ticket mail content</div>
+        <label>Destination Location:</label>
+        <input type="text" id="location" placeholder="Eg: Chennai office">
+        <label>IT Person Name:</label>
+        <input type="text" id="itPerson" placeholder="Eg: Ravi Kumar">
+        <label>DC Number Link (URL):</label>
+        <input type="text" id="dcLink" placeholder="Eg: https://yourcompany/dc/12345">
+        <label>FMG Ticket Link 1:</label>
+        <input type="text" id="ticket1" placeholder="Eg: https://yourcompany.atlassian.net/browse/FMGTKT-9509">
+        <label>FMG Ticket Link 2:</label>
+        <input type="text" id="ticket2" placeholder="(optional)">
+        <div style="margin-top:10px;">
+            <strong>Assets to Dispatch</strong>
+            <table id="assetTable">
+                <thead>
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Asset Tag</th>
+                        <th>Serial No</th>
+                        <th>Charger Name</th>
+                        <th>Bag</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button type="button" onclick="addAssetRow()">+ Add Asset</button>
+        </div>
         <button type="button" onclick="updatePreview()">Show Preview</button>
     </div>
-    <div class="preview-section">
-        <h2>Preview Email</h2>
-        <div id="emailPreview"></div>
+    <div class="preview-section card">
+        <h2>Dispatch Preview</h2>
+        <div id="dispatchPreview"></div>
+        <h2>FMG Ticket Preview</h2>
+        <div id="fmgPreview"></div>
     </div>
 </div>
 <script>
 function addAssetRow() {
-    let tbody = document.getElementById('assetsTable').querySelector('tbody');
+    let tbody = document.getElementById('assetTable').querySelector('tbody');
     let row = tbody.insertRow();
     row.innerHTML =
         `<td><input type="text" placeholder="Asset Name"></td>
          <td><input type="text" placeholder="Asset Tag"></td>
          <td><input type="text" placeholder="Serial No"></td>
-         <td><input type="checkbox" class="withAdapter" onclick="updatePreview()" checked></td>
-         <td><input type="checkbox" class="withBag" onclick="updatePreview()" checked></td>
-         <td><button class="delete-btn" onclick="deleteRow(this)">X</button></td>`;
+         <td><input type="text" placeholder="Charger Name"></td>
+         <td><input type="checkbox" class="bagCheckbox"></td>
+         <td><button class="delete-btn" onclick="deleteRow(this)">&#10006;</button></td>`;
 }
-function addAssignmentRow() {
-    let tbody = document.getElementById('assignmentsTable').querySelector('tbody');
-    let row = tbody.insertRow();
-    row.innerHTML =
-        `<td><input type="text" placeholder="Asset Name"></td>
-         <td><input type="text" placeholder="Asset Tag"></td>
-         <td><input type="text" placeholder="Serial No"></td>
-         <td><input type="checkbox" class="withAdapter" onclick="updatePreview()" checked></td>
-         <td><input type="checkbox" class="withBag" onclick="updatePreview()" checked></td>
-         <td><button class="delete-btn" onclick="deleteRow(this)">X</button></td>`;
-}
-function deleteRow(btn) {
-    btn.closest('tr').remove();
-    updatePreview();
-}
-function getTableData(tableId) {
-    let rows = document.querySelectorAll(`#${tableId} tbody tr`);
-    let data = [];
+function deleteRow(btn) { btn.closest('tr').remove(); updatePreview(); }
+function getAssets() {
+    let rows = [...document.querySelectorAll('#assetTable tbody tr')];
+    let assets = [];
     rows.forEach(row => {
         let cells = row.querySelectorAll('input');
         if (
-            cells.length >= 5 &&
-            (cells[0].value||cells[1].value||cells[2].value)
+            (cells[0].value || cells[1].value || cells[2].value || cells[3].value)
         ) {
-            data.push({
-                name: cells[0].value,
-                tag: cells[1].value,
-                serial: cells[2].value,
-                withAdapter: cells[3].checked,
+            assets.push({
+                name: cells[0].value.trim(),
+                tag: cells[1].value.trim(),
+                serial: cells[2].value.trim(),
+                charger: cells[3].value.trim(),
                 withBag: cells[4].checked
             });
         }
     });
-    return data;
+    return assets;
 }
-function renderRetTable(rows) {
-    let html = `<table class="email-table"><thead>
-      <tr><th>Asset Name</th><th>Asset Tag</th><th>Serial No</th></tr></thead><tbody>`;
-    rows.forEach(r => {
-        html += `<tr><td>${r.name}</td><td>${r.tag}</td><td>${r.serial}</td></tr>`;
-        if (r.withAdapter) {
-            html += `<tr><td>Charging Adapter</td><td>-</td><td>-</td></tr>`;
-        }
-        if (r.withBag) {
-            html += `<tr><td>Bag</td><td>-</td><td>-</td></tr>`;
-        }
+function assetDesc(asset, location) {
+    let parts = [asset.name];
+    if(asset.charger) parts.push(`along with its ${asset.charger}`);
+    parts.push(asset.withBag ? "with a bag" : "but without a bag");
+    return `<span style="margin-bottom:18px;display:block;">Dispatching the ${parts.join(" ")} to ${location} for repair.</span>`;
+}
+function renderMailContent(assets, location, dcLink, itPerson) {
+    let dcNumber = dcLink ? `DC Link: <a href="${dcLink}" target="_blank">${dcLink}</a>` : "";
+    let assetRows = "";
+    assets.forEach(asset => {
+        assetRows += `<tr><td>${asset.name}</td><td>${asset.serial}</td><td>${asset.tag}</td><td>1</td></tr>`;
+        if(asset.charger) assetRows += `<tr><td>${asset.charger}</td><td>-</td><td>-</td><td>1</td></tr>`;
+        if(asset.withBag) assetRows += `<tr><td>Bag</td><td>-</td><td>-</td><td>1</td></tr>`;
     });
-    html += "</tbody></table>";
-    return html;
+
+    let summaries = assets.map(a => assetDesc(a, location)).join("<br><br>");
+
+    return `
+<div style="margin-bottom:22px;"><strong>Hi Team,</strong></div>
+${summaries}
+<div style="margin-bottom:18px;"><strong>Please confirm once you have received the following assets.</strong></div>
+${dcNumber}
+<br><br><strong>Asset Details:</strong><br>
+<table><thead>
+    <tr><th>Material Name</th><th>Serial No</th><th>Asset No</th><th>Quantity</th></tr>
+</thead><tbody>
+${assetRows}
+</tbody></table>
+<br><br><div><strong>Regards,<br>${itPerson ? itPerson : "<IT Person Name>"}</strong></div>
+    `;
 }
-function renderAllocTable(rows) {
-    let html = `<table class="email-table"><thead>
-        <tr>
-            <th>Asset Name</th>
-            <th>Asset Tag</th>
-            <th>Serial No</th>
-        </tr>
-    </thead><tbody>`;
-    rows.forEach(r => {
-        html += `<tr><td>${r.name}</td><td>${r.tag}</td><td>${r.serial}</td></tr>`;
-        if (r.withAdapter) {
-            html += `<tr><td>Charging Adapter</td><td>-</td><td>-</td></tr>`;
-        }
-        if (r.withBag) {
-            html += `<tr><td>Bag</td><td>-</td><td>-</td></tr>`;
-        }
-    });
-    html += "</tbody></table>";
-    return html;
-}
-function getStatusPhrase(adapter, bag) {
-    let phrases = [];
-    phrases.push(adapter ? "with charging adapter" : "without charging adapter");
-    phrases.push(bag ? "with bag" : "without bag");
-    return phrases.join(" and ");
-}
-function getItemComment(asset, person, action) {
-    let status = getStatusPhrase(asset.withAdapter, asset.withBag);
-    return `- I ${action} the ${asset.name} ${status} ${action==='received' ? 'from' : 'to'} ${person}.`;
+function renderFMGContent(assets, location, ticket1, ticket2) {
+    let ticketLinks = ticket1 ? `<a href="${ticket1}" target="_blank">${ticket1}</a>` : "";
+    ticketLinks += ticket2 ? `,<br><a href="${ticket2}" target="_blank">${ticket2}</a>` : "";
+
+    let descs = assets.map(asset => {
+        let bagTxt = asset.withBag ? "with bag" : "without bag";
+        let assetTxt = [asset.name];
+        if(asset.charger) assetTxt.push(`along with its ${asset.charger}`);
+        assetTxt.push(bagTxt);
+        return `<span style="margin-bottom:17px;display:block;">Please arrange for the courier of ${assetTxt.join(" ")} to ${location}</span>`;
+    }).join("<br><br>");
+
+    return `
+<div style="margin-bottom:24px;"><strong>FMG Ticket content:</strong></div>
+${ticketLinks ? `[${ticketLinks} (ref)]<br><br>` : ""}
+${descs}
+<br><br>
+<div style="margin-bottom:16px;"><strong>Description</strong></div>
+<div style="margin-bottom:16px;"><strong>Hi Team,</strong></div>
+${descs}
+    `;
 }
 function updatePreview() {
-    let relieved = document.getElementById('relievedEmployee').value.trim();
-    let assigned = document.getElementById('assignedPerson').value.trim();
-    let itMember = document.getElementById('itMember').value.trim();
-    let comments = document.getElementById('comments').value.trim();
-    let returnedAssets = getTableData('assetsTable');
-    let assignedAssets = getTableData('assignmentsTable');
+    let location = document.getElementById('location').value.trim();
+    let dcLink = document.getElementById('dcLink').value.trim();
+    let itPerson = document.getElementById('itPerson').value.trim();
+    let ticket1 = document.getElementById('ticket1').value.trim();
+    let ticket2 = document.getElementById('ticket2').value.trim();
+    let assets = getAssets();
 
-    let html = `<div><strong>Subject:</strong> Asset Handover${relieved ? ' – ' + relieved : ''}</div><br>`;
-    html += `<div>Hi Team,<br><br></div>`;
-
-    if(relieved && returnedAssets.length) {
-        html += `I have received the following assets from <strong>${relieved}</strong>:<br>`;
-        html += renderRetTable(returnedAssets);
-    }
-    if(relieved && !returnedAssets.length) {
-        html += `This is to confirm that <strong>${relieved}</strong> has completed asset handover.<br>`;
-    }
-
-    if(assigned && assignedAssets.length) {
-        html += `<br><strong>Assets Allocated – ${assigned}</strong>`;
-        html += renderAllocTable(assignedAssets);
-    }
-
-    if(comments) {
-        html += `<br><strong>General Comments:</strong> ${comments}<br>`;
-    }
-    html += `<br>Regards,<br>${itMember ? itMember : "<SNMG Member Name>"}`;
-    html += `<br><br><strong>Item Summary:</strong><br><ul>`;
-    returnedAssets.forEach(function(asset){
-        html += `<li>${getItemComment(asset, relieved, "received")}</li>`;
-    });
-    assignedAssets.forEach(function(asset){
-        html += `<li>${getItemComment(asset, assigned, "allocated")}</li>`;
-    });
-    html += `</ul>`;
-    document.getElementById('emailPreview').innerHTML = html;
+    document.getElementById('dispatchPreview').innerHTML = renderMailContent(assets, location, dcLink, itPerson);
+    document.getElementById('fmgPreview').innerHTML = renderFMGContent(assets, location, ticket1, ticket2);
 }
 addAssetRow();
-addAssignmentRow();
 updatePreview();
 </script>
 </body>
