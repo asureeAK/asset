@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Asset Management Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(120deg, #f7f9fc 0%, #e3e8ee 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 64px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #0003, 0 1.5px 5px #cbd3df;
+            padding: 38px 30px 32px 30px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            letter-spacing: .02em;
+            color: #022b5a;
+            margin-bottom: 28px;
+        }
+        .subtitle {
+            font-size: 1.08em;
+            color: #334e6c;
+            margin-bottom: 34px;
+        }
+        .menu {
+            margin-top: 0;
+        }
+        .card-link {
+            display: flex;
+            align-items: center;
+            background: #f0f6fc;
+            color: #1a40b7;
+            text-decoration: none;
+            border-radius: 11px;
+            padding: 18px 18px;
+            margin-bottom: 32px;
+            font-size: 1.15em;
+            font-weight: 600;
+            box-shadow: 0 1px 6px #c8d2e1;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .card-link:hover {
+            background: #e3eaf7;
+            box-shadow: 0 2px 12px #b5c0de;
+            color: #0a2664;
+        }
+        .card-link .icon {
+            font-size: 1.6em;
+            margin-right: 18px;
+        }
+        @media (max-width:600px) {
+            .container { max-width: 96vw; padding: 17vw 5vw; }
+            h1 { font-size: 1.34em; margin-bottom: 16px; }
+            .subtitle { font-size: .95em; margin-bottom: 18px;}
+            .card-link { font-size: 1em; padding: 13px 11px; margin-bottom: 16px;}
+            .card-link .icon { font-size: 1.2em; margin-right: 10px;}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Asset Management Portal</h1>
+        <div class="subtitle">Choose your workflow:</div>
+        <div class="menu">
+            <a class="card-link" href="dc/index.html">
+                <span class="icon">🚚</span> DC Dispatch & FMG Ticket
+            </a>
+            <a class="card-link" href="handover/index.html">
+                <span class="icon">📦</span> Asset Handover
+            </a>
+        </div>
+    </div>
+</body>
+</html>
